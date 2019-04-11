@@ -11,6 +11,7 @@ import (
 
 var _ = check.Suite(&sortTestSuite{})
 
+//测试*sortTestSuite中所有Test开头的方法
 func TestT(t *testing.T) {
 	check.TestingT(t)
 }
