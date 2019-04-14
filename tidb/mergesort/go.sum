@@ -1,2 +1,6 @@
+github.com/davecheney/gcvis v0.0.0-20190313012026-3e1bb5e04774 h1:o9VhSyqkukDJDVPoKqPqCkj/LWwetA9NVFTMM1/j/ZI=
+github.com/davecheney/gcvis v0.0.0-20190313012026-3e1bb5e04774/go.mod h1:+tc4BzclC+Swxs1ySgS/moEjGaHc36DG6hDQu0n7s0I=
 github.com/pingcap/check v0.0.0-20190102082844-67f458068fc8 h1:USx2/E1bX46VG32FIw034Au6seQ2fY9NEILmNh/UlQg=
 github.com/pingcap/check v0.0.0-20190102082844-67f458068fc8/go.mod h1:B1+S9LNcuMyLH/4HMTViQOJevkGiik3wW2AN9zb2fNQ=
+github.com/pkg/browser v0.0.0-20180916011732-0a3d74bf9ce4 h1:49lOXmGaUpV9Fz3gd7TFZY106KVlPVa5jcYD1gaQf98=
+github.com/pkg/browser v0.0.0-20180916011732-0a3d74bf9ce4/go.mod h1:4OwLy04Bl9Ef3GJJCoec+30X3LQs/0/m4HFRt/2LUSA=

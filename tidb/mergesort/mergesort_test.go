@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"sort"
 	"testing"
@@ -39,4 +40,10 @@ func (s *sortTestSuite) TestMergeSort(c *check.C) {
 			c.Assert(src[i], check.Equals, expect[i])
 		}
 	}
+}
+
+func TestTrace(t *testing.T) {
+	src := []int64{9, 8, 4, 11, 9, 7, 0}
+	MergeSort(src)
+	fmt.Println(src)
 }
