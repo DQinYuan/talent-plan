@@ -32,7 +32,7 @@ func (s *sortTestSuite) TestQuickSort(c *check.C) {
 		expect := make([]int64, lens[i])
 		prepare(src)
 		copy(expect, src)
-		MergeSort(src)
+		quickSort(src)
 		sort.Slice(expect, func(i, j int) bool { return expect[i] < expect[j] })
 		for i := 0; i < len(src); i++ {
 			c.Assert(src[i], check.Equals, expect[i])

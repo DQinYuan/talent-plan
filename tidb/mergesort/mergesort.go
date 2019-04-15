@@ -1,27 +1,52 @@
 package main
 
-import "sync"
+import (
+	"sync"
+)
 
+const max = 1 << 11
 
 // MergeSort performs the merge sort algorithm.
 // Please supplement this function to accomplish the home work.
 func MergeSort(src []int64) {
-	prepareCh()
 	dst := make([]int64, len(src))
 	wg := new(sync.WaitGroup)
 
-	mUntil(len(src), src, dst, wg)
+	if len(src) <= max{
+		mUntil(1, src, dst, 0, len(src), wg, false)
+		return
+	}
+
+	waitNum := len(src) / max
+	wg.Add(waitNum)
+	i := 0
+	for i <= len(src) - max{
+		// 先将max大小的使用单线程归并分别排序好
+		go func(low int) {
+			defer wg.Done()
+			mUntil(1, src, dst, low, low + max, wg, false)
+		}(i)
+		i += max
+	}
+
+	if i < len(src){
+		mUntil(1, src, dst, i, len(src), wg, false)
+	}
+
+	wg.Wait()
+
+	mUntil(max, src, dst, 0, len(src),wg, true)
 }
 
-
-func mUntil(threshold int, src []int64, dst []int64, wg *sync.WaitGroup, par bool){
+// 从from长度的块开始归并排序src, par表示是否并行
+func mUntil(from int, src []int64, dst []int64, low int, high int, wg *sync.WaitGroup, par bool){
 	var temp []int64
 
-	i := 1
+	i := from
 	counter := 0
 
-	for i < threshold{
-		mSort(src, dst, i, wg, par)
+	for i < high - low{
+		mSort(src, dst, i, low, high, wg, par)
 		i *= 2
 		temp = dst
 		dst = src
@@ -33,32 +58,48 @@ func mUntil(threshold int, src []int64, dst []int64, wg *sync.WaitGroup, par boo
 		return
 	}
 
-	copy(dst, src)
+	copy(dst[low:high], src[low:high])
 }
 
-//从src归并到dest
-func mSort(src []int64, dest []int64, k int, wg *sync.WaitGroup, par bool) {
-	waitNum := len(src) / (2 * k)
-	wg.Add(waitNum)
+func mSort(src []int64, dest []int64, k int, low int, high int, wg *sync.WaitGroup, par bool) {
+	i := low
+	len := high - low
 
-	i := 0
-	for i <= len(src) - 2 * k{
-		mp := <- toCh
-		setMp(mp, src, dest, i, i + k, i + 2 * k, wg)
-		fromCh <- mp
-		i += 2 * k
+	if par{
+		waitNum := len / (2 * k)
+		wg.Add(waitNum)
+
+		for i <= high - 2 * k{
+			go func(i int) {
+				defer wg.Done()
+				merge(src, dest, i, i + k, i + 2 * k)
+			}(i)
+			i += 2 * k
+		}
+
+	} else {
+
+		for i <= high - 2 * k{
+			merge(src, dest, i, i + k, i + 2 * k)
+			i += 2 * k
+		}
+
 	}
 
-	wg.Wait()
 
-	if i < len(src) - k {
-		merge(src, dest, i, i + k, len(src))
+	if i < high - k {
+		merge(src, dest, i, i + k, high)
 	} else {
-		copy(dest[i:], src[i:])
+		copy(dest[i:high], src[i:high])
+	}
+
+	if par == true{
+		wg.Wait()
 	}
 }
 
 func merge(src []int64, dest []int64, low int, mid int, high int)  {
+
 	for i, p, q := low, low, mid; i < high; i++ {
 		if q >= high || (p < mid && src[p] < src[q]) {
 			dest[i] = src[p]

@@ -1,2 +1,5 @@
 .idea
 cpu.prof
+mem.prof
+trace.out
+block.prof
