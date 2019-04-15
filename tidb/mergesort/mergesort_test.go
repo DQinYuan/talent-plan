@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 	"sort"
 	"testing"
@@ -43,7 +42,8 @@ func (s *sortTestSuite) TestMergeSort(c *check.C) {
 }
 
 func TestTrace(t *testing.T) {
-	src := []int64{9, 8, 4, 11, 9, 7, 0}
+	src := make([]int64, 10000)
+	prepare(src)
 	MergeSort(src)
-	fmt.Println(src)
+	//fmt.Println(src)
 }

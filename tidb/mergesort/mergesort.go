@@ -1,14 +1,27 @@
 package main
 
+import "sync"
+
+
 // MergeSort performs the merge sort algorithm.
 // Please supplement this function to accomplish the home work.
 func MergeSort(src []int64) {
+	prepareCh()
 	dst := make([]int64, len(src))
+	wg := new(sync.WaitGroup)
+
+	mUntil(len(src), src, dst, wg)
+}
+
+
+func mUntil(threshold int, src []int64, dst []int64, wg *sync.WaitGroup, par bool){
+	var temp []int64
+
 	i := 1
 	counter := 0
-	var temp []int64
-	for i < len(src){
-		mSort(src, dst, i)
+
+	for i < threshold{
+		mSort(src, dst, i, wg, par)
 		i *= 2
 		temp = dst
 		dst = src
@@ -23,14 +36,20 @@ func MergeSort(src []int64) {
 	copy(dst, src)
 }
 
-
 //从src归并到dest
-func mSort(src []int64, dest []int64, k int) {
+func mSort(src []int64, dest []int64, k int, wg *sync.WaitGroup, par bool) {
+	waitNum := len(src) / (2 * k)
+	wg.Add(waitNum)
+
 	i := 0
 	for i <= len(src) - 2 * k{
-		merge(src, dest, i, i + k, i + 2 * k)
+		mp := <- toCh
+		setMp(mp, src, dest, i, i + k, i + 2 * k, wg)
+		fromCh <- mp
 		i += 2 * k
 	}
+
+	wg.Wait()
 
 	if i < len(src) - k {
 		merge(src, dest, i, i + k, len(src))
