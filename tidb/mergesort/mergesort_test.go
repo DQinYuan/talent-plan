@@ -40,10 +40,3 @@ func (s *sortTestSuite) TestMergeSort(c *check.C) {
 		}
 	}
 }
-
-func TestTrace(t *testing.T) {
-	src := make([]int64, 16000000)
-	prepare(src)
-	MergeSort(src)
-	//fmt.Println(src)
-}
